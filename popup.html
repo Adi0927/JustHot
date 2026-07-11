@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      width: 264px;
+      margin: 0;
+      padding: 14px 16px 16px;
+      background: #0f1014;
+      color: #e8e8ea;
+    }
+
+    /* ── Header ── */
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .head img { width: 48px; height: 48px; border-radius: 7px; }
+    .head h1  { font-size: 16px; font-weight: 700; margin: 0; letter-spacing: .15px; }
+    .tagline  { font-size: 10px; color: #55585f; margin-top: 2px; line-height: 1.4; text-align: justify; }
+
+    /* ── Platform rows ── */
+    .platform {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px solid #1e2026;
+    }
+
+    .platform-label { font-size: 13px; font-weight: 600; line-height: 1.2; }
+    .platform-desc  { font-size: 10px; color: #55585f; margin-top: 2px; }
+
+    /* ── Radio pill group ── */
+    .radio-group {
+      display: flex;
+      flex-shrink: 0;
+      background: #1a1d23;
+      border-radius: 20px;
+      padding: 2px;
+    }
+    .radio-group input[type="radio"] { display: none; }
+    .radio-group label {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 13px;
+      border-radius: 16px;
+      cursor: pointer;
+      color: #55585f;
+      transition: background .15s, color .15s;
+      -webkit-user-select: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* ON pill — orange when selected */
+    #hs-on:checked  + label,
+    #pv-on:checked  + label { background: #ff7a00; color: #fff; }
+
+    /* OFF pill — subtle dark when selected */
+    #hs-off:checked + label,
+    #pv-off:checked + label { background: #2a2d34; color: #888; }
+
+    /* ── Footer hint ── */
+    .hint {
+      margin-top: 14px;
+      font-size: 10px;
+      color: #3a3d44;
+      line-height: 1.55;
+    }
+    .hint a { color: #ff7a00; text-decoration: none; }
+    .hint a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="head">
+    <img src="icons/icon128.png" id="logo" alt="JustHot" />
+    <div>
+      <h1>JustHot</h1>
+      <div class="tagline">Auto-mutes Hotstar live match ads and fast-forwards Prime Video ads, so you never have to lose your cool.</div>
+    </div>
+  </div>
+
+  <!-- Hotstar row -->
+  <div class="platform">
+    <div>
+      <div class="platform-label">Hotstar</div>
+      <div class="platform-desc">Mutes live-match ad breaks</div>
+    </div>
+    <div class="radio-group">
+      <input type="radio" name="hotstar" id="hs-on"  value="on"  />
+      <label for="hs-on">On</label>
+      <input type="radio" name="hotstar" id="hs-off" value="off" />
+      <label for="hs-off">Off</label>
+    </div>
+  </div>
+
+  <!-- Prime Video row -->
+  <div class="platform">
+    <div>
+      <div class="platform-label">Prime Video</div>
+      <div class="platform-desc">Fast-forwards ad breaks</div>
+    </div>
+    <div class="radio-group">
+      <input type="radio" name="prime" id="pv-on"  value="on"  />
+      <label for="pv-on">On</label>
+      <input type="radio" name="prime" id="pv-off" value="off" />
+      <label for="pv-off">Off</label>
+    </div>
+  </div>
+
+  <div class="hint">Feedback and suggestions welcome! <a href="mailto:feelfreewithnu@gmail.com">feelfreewithnu@gmail.com</a></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
