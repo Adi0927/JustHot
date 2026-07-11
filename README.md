@@ -98,3 +98,9 @@ Pull requests are reviewed and merged at the maintainer's discretion. To keep th
 JustHot collects **no user data**. The only local storage used is your on/off toggle preference per platform — it never leaves your device.
 
 Full details: [PRIVACY.md](PRIVACY.md)
+
+---
+
+<div align="center">
+  <sub>© 2026 NUBEGINNINGS INDIA PRIVATE LIMITED · MIT License</sub>
+</div>
