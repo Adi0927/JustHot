@@ -3,7 +3,7 @@
   <h1>JustHot</h1>
   <p><strong>Auto-mutes Hotstar live match ads and fast-forwards Prime Video ads,<br/>so you never have to lose your cool.</strong></p>
   <img src="https://img.shields.io/badge/Manifest-V3-orange?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/version-5.0.0-orange?style=flat-square" alt="v5.0.0" />
+  <img src="https://img.shields.io/badge/version-5.0.1-orange?style=flat-square" alt="v5.0.1" />
   <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" alt="MIT license" />
 </div>
 
@@ -14,7 +14,7 @@
 JustHot is a lightweight Chrome extension (Manifest V3) built for streaming viewers who are tired of ad interruptions. It runs silently in the background — no accounts, no setup, no data collection.
 
 - **Platform:** Google Chrome (Manifest V3)
-- **Version:** 5.0.0
+- **Version:** 5.0.1
 - **Size:** < 50 KB
 
 ---

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "JustHot",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Mutes ad breaks on Hotstar live matches. Fast-forwards ads on Prime Video. Each platform toggled independently.",
   "permissions": ["storage", "webRequest", "tabs"],
   "host_permissions": [
