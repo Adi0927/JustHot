@@ -13,9 +13,21 @@
 
 JustHot is a lightweight Chrome extension (Manifest V3) built for streaming viewers who are tired of ad interruptions. It runs silently in the background — no accounts, no setup, no data collection.
 
-- **Platform:** Google Chrome (Manifest V3)
 - **Version:** 5.0.1
 - **Size:** < 50 KB
+- **Platform:** Google Chrome (Manifest V3)
+
+### Browser compatibility
+
+| Browser | Works? | Notes |
+|---------|--------|-------|
+| Chrome | ✅ Yes | Primary platform |
+| Edge | ✅ Yes | Install directly from Chrome Web Store |
+| Brave | ✅ Yes | Install directly from Chrome Web Store |
+| Opera | ✅ Yes | Enable "Install Chrome Extensions" first |
+| Vivaldi | ✅ Yes | Chrome extensions work out of the box |
+| Firefox | 🚧 WIP | Coming soon.. |
+| Safari | 🚧 WIP | Coming soon... |
 
 ---
 
