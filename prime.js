@@ -19,9 +19,13 @@
     '[class*="adCount"]',
     '[class*="ad-countdown"]',
     '[data-testid*="ad-"]',
+    '[class*="preroll"]',
+    '[class*="pre-roll"]',
+    '[class*="adOverlay"]',
+    '[class*="adBadge"]',
   ];
 
-  const AD_TEXT = /(^|\s)(ad|ads)\b|video will resume|ad\s*\d+\s*of\s*\d+|remaining/i;
+  const AD_TEXT = /(^|\s)(ad|ads)\b|video will resume|ad\s*\d+\s*of\s*\d+|remaining|advertisement|skip\s+in\s+\d/i;
 
   function visible(el) {
     if (!el) return false;
@@ -49,15 +53,15 @@
   }
 
   function getVideo() {
-    const vids = [...document.querySelectorAll("video")].filter((v) => v.readyState > 0);
-    return vids.find((v) => !v.paused) || vids[0] || null;
+    const vids = [...document.querySelectorAll("video")].filter((v) => v.readyState >= 1);
+    return vids.find((v) => !v.paused) || vids.find((v) => v.readyState >= 2) || vids[0] || null;
   }
 
   function clickSkipButtons() {
     const btns = document.querySelectorAll('button, [role="button"]');
     for (const b of btns) {
       const t = (b.textContent || "").trim().toLowerCase();
-      if (/\bskip\b/.test(t) && /ad|ads|intro/.test(t) && visible(b)) { b.click(); return; }
+      if (/\bskip\b/.test(t) && visible(b)) { b.click(); return; }
     }
   }
 
