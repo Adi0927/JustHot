@@ -114,5 +114,11 @@ Full details: [PRIVACY.md](PRIVACY.md)
 ---
 
 <div align="center">
+  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes Hotstar live match ads and fast-forwards Prime Video ads" />
+</div>
+
+---
+
+<div align="center">
   <sub>© 2026 NUBEGINNINGS INDIA PRIVATE LIMITED · MIT License</sub>
 </div>
