@@ -35,7 +35,7 @@ JustHot is a lightweight Chrome extension (Manifest V3) built for streaming view
 
 | Asset | Usage |
 |-------|-------|
-| <img src="icons/icon48.png" width="28" /> | Active state (both or either platform enabled) |
+| <img src="icons/icon48.png" width="28" /> | Active state (any platform enabled) |
 | <img src="icons/icon48-gray.png" width="28" /> | Inactive state (all platforms off) |
 
 Primary color: `#ff7a00` — used for the active toggle pill and brand accent.  
@@ -77,7 +77,7 @@ Reach out at **[feelfreewithnu@gmail.com](mailto:feelfreewithnu@gmail.com)**
 
 Please include:
 - Browser version
-- Which platform (Hotstar / Prime Video)
+- Which platform (Hotstar / Prime Video / Zee5)
 - What happened vs. what you expected
 
 ---
@@ -121,7 +121,7 @@ Full details: [PRIVACY.md](PRIVACY.md)
 ---
 
 <div align="center">
-  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes Hotstar live match ads and fast-forwards Prime Video ads" />
+  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes Hotstar &amp; Zee5 ads. Fast-forwards Prime Video ads." />
 </div>
 
 ---
