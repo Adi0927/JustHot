@@ -1,9 +1,9 @@
 <div align="center">
   <img src="icons/icon128.png" width="88" alt="JustHot logo" />
   <h1>JustHot</h1>
-  <p><strong>Auto-mutes Hotstar live match ads and fast-forwards Prime Video ads,<br/>so you never have to lose your cool.</strong></p>
+  <p><strong>Auto-mutes Hotstar &amp; Zee5 ads. Fast-forwards Prime Video ads.<br/>So you never have to lose your cool.</strong></p>
   <img src="https://img.shields.io/badge/Manifest-V3-orange?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/version-5.0.1-orange?style=flat-square" alt="v5.0.1" />
+  <img src="https://img.shields.io/badge/version-5.1.0-orange?style=flat-square" alt="v5.1.0" />
   <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" alt="MIT license" />
 </div>
 
@@ -13,7 +13,7 @@
 
 JustHot is a lightweight Chrome extension (Manifest V3) built for streaming viewers who are tired of ad interruptions. It runs silently in the background — no accounts, no setup, no data collection.
 
-- **Version:** 5.0.1
+- **Version:** 5.1.0
 - **Size:** < 50 KB
 - **Platform:** Google Chrome (Manifest V3)
 
@@ -50,6 +50,13 @@ Background: `#0f1014` — deep dark, easy on the eyes during night matches.
 - Mutes the browser tab the instant an ad starts
 - Unmutes automatically when the match resumes
 - Parses ad duration from the tracking URL for precise timing
+
+### Zee5 — Ad Muting
+
+- Detects ad breaks in real time using DOM signals in the Zee5 player
+- Mutes the video the instant an ad starts
+- Unmutes automatically when content resumes
+- Works despite Zee5's SSAI architecture (AWS MediaTailor server-side ad stitching)
 
 ### Prime Video — Ad Fast-Forward
 - Detects Prime Video ad UI using DOM selectors and text patterns

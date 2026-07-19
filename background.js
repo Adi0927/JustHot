@@ -12,18 +12,20 @@ const BUFFER_SECONDS = 1;
 
 let hotstarEnabled = false;
 let primeEnabled = false;
+let zee5Enabled = false;
 const tabs = new Map(); // tabId -> { networkUntil, domAd, domSeenThisBreak, mutedByUs, timer }
 
 const BASE_ICONS  = { 16: "icons/icon16.png",     32: "icons/icon32.png",     48: "icons/icon48.png",     128: "icons/icon128.png"     };
 const OFF_ICONS   = { 16: "icons/icon16-gray.png",  32: "icons/icon32-gray.png",  48: "icons/icon48-gray.png",  128: "icons/icon128-gray.png"  };
 
 function updateIcon() {
-  chrome.action.setIcon({ path: (hotstarEnabled || primeEnabled) ? BASE_ICONS : OFF_ICONS });
+  chrome.action.setIcon({ path: (hotstarEnabled || primeEnabled || zee5Enabled) ? BASE_ICONS : OFF_ICONS });
 }
 
-chrome.storage.local.get({ hotstarEnabled: false, primeEnabled: false }, (r) => {
+chrome.storage.local.get({ hotstarEnabled: false, primeEnabled: false, zee5Enabled: false }, (r) => {
   hotstarEnabled = !!r.hotstarEnabled;
   primeEnabled   = !!r.primeEnabled;
+  zee5Enabled    = !!r.zee5Enabled;
   updateIcon();
 });
 
@@ -39,6 +41,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
     }
   }
   if ("primeEnabled" in changes) primeEnabled = !!changes.primeEnabled.newValue;
+  if ("zee5Enabled"  in changes) zee5Enabled  = !!changes.zee5Enabled.newValue;
   updateIcon();
 });
 
