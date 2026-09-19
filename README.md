@@ -89,8 +89,12 @@ Background: `#0f1014` — deep dark, easy on the eyes during night matches.
 ### Prime Video — Ad Fast-Forward
 - Detects Prime Video ad UI using DOM selectors and text patterns
 - Speeds through ads at 16× playback (muted)
-- Clicks visible skip buttons automatically
+- Clicks visible ad-skip buttons automatically (leaves Skip Intro/Recap alone)
 - Restores original playback speed and audio the moment the show resumes
+- Restores every video element it touched, so a player that swaps `<video>` nodes
+  mid-break cannot leave one running fast
+- Gives up after 3 minutes of continuous skipping, so a mis-detected ad can never
+  fast-forward the show itself
 
 ### Independent Controls
 Each platform has its own On/Off toggle — enabling one does not affect the others.
