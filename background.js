@@ -62,7 +62,12 @@ const ready = new Promise((resolve) => {
   chrome.storage.local.get(DEFAULTS, (r) => {
     for (const k of PLATFORM_KEYS) flags[k] = !!r[k];
     updateIcon();
-    if (!flags.hotstarEnabled) unmuteOurTabs(); // clear anything a previous worker left muted
+    // Always sweep, not just when Hotstar is off. An extension reload orphans the
+    // content script on an open tab, so no TICK ever arrives and reconcile never
+    // runs -- a tab muted at that moment would stay muted for good. If an ad really
+    // is playing, the next TICK re-mutes within a second; a brief blip beats a tab
+    // the viewer cannot unmute.
+    unmuteOurTabs();
     resolve();
   });
 });

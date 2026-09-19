@@ -33,6 +33,7 @@
   }
 
   function evaluate() {
+    if (!JH.contextAlive()) { teardown(); return; }
     if (!enabled) {
       if (domAd) { domAd = false; JH.send({ type: "DOM_AD_END" }); }
       return;
@@ -52,11 +53,18 @@
   });
 
   const onMutation = JH.throttle(evaluate, 150);
-  new MutationObserver(onMutation).observe(document.documentElement, {
+  const observer = new MutationObserver(onMutation);
+  observer.observe(document.documentElement, {
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
   // Polls faster than the heartbeat so the grace period is confirmed promptly.
-  setInterval(evaluate, 250);
-  setInterval(() => { if (enabled) JH.send({ type: "TICK" }); }, 1000);
+  const evalTimer = setInterval(evaluate, 250);
+  const tickTimer = setInterval(() => { if (enabled) JH.send({ type: "TICK" }); }, 1000);
+
+  function teardown() {
+    clearInterval(evalTimer);
+    clearInterval(tickTimer);
+    observer.disconnect();
+  }
 })();

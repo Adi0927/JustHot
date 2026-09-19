@@ -127,6 +127,14 @@ window.JH = window.JH || (() => {
     };
   }
 
+  // An extension reload orphans the content scripts already on the page: they keep
+  // running, but their chrome.* bridge is dead, so storage.onChanged never fires
+  // again and the user has no way to switch them off. Anything that mutes or
+  // changes playback has to notice this and hand control back.
+  function contextAlive() {
+    try { return !!(chrome.runtime && chrome.runtime.id); } catch (_) { return false; }
+  }
+
   // After an extension reload the old content script keeps running against a dead
   // context; sendMessage then throws on every call.
   function send(msg) {
@@ -135,5 +143,5 @@ window.JH = window.JH || (() => {
     } catch (_) { /* extension context invalidated */ }
   }
 
-  return { isAdName, isAdElement, visible, matchesAdSelector, matchesPlayerAd, matchesAdText, playerScope, getVideo, throttle, send };
+  return { isAdName, isAdElement, visible, matchesAdSelector, matchesPlayerAd, matchesAdText, playerScope, getVideo, throttle, send, contextAlive };
 })();

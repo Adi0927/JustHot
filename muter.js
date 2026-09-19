@@ -32,7 +32,7 @@
   const STORAGE_KEY = platform.key;
 
   let enabled = false;
-  let muted = []; // the exact elements we muted; players swap <video> nodes
+  const muted = new Set(); // the exact elements we muted; players swap <video> nodes
 
   const AD_SELECTORS = [
     '[class*="ad-container"]',
@@ -64,19 +64,21 @@
     return JH.matchesAdText(AD_TEXT, 30, JH.playerScope());
   }
 
+  // Runs on every tick of a break, not just the first: IMA and friends can attach a
+  // fresh <video> partway through, and bailing out early left that one audible.
   function muteAll() {
-    if (muted.length) return;
     for (const v of document.querySelectorAll("video")) {
-      if (!v.muted) { v.muted = true; muted.push(v); }
+      if (!v.muted) { v.muted = true; muted.add(v); }
     }
   }
 
   function unmuteAll() {
     for (const v of muted) { try { v.muted = false; } catch (_) {} }
-    muted = [];
+    muted.clear();
   }
 
   function tick() {
+    if (!JH.contextAlive()) { unmuteAll(); teardown(); return; }
     if (!enabled) { unmuteAll(); return; }
     if (!document.querySelector("video")) return;
     if (adShowing()) muteAll(); else unmuteAll();
@@ -88,9 +90,17 @@
   });
 
   const onMutation = JH.throttle(tick, 150);
-  new MutationObserver(onMutation).observe(document.documentElement, {
+  const observer = new MutationObserver(onMutation);
+  observer.observe(document.documentElement, {
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
-  setInterval(tick, 400);
+  const timer = setInterval(tick, 400);
+
+  function teardown() {
+    clearInterval(timer);
+    observer.disconnect();
+  }
+
+  window.addEventListener("pagehide", unmuteAll);
 })();
