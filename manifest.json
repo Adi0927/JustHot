@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "JustHot",
   "version": "5.2.0",
-  "description": "Mutes ad breaks on Hotstar, Zee5, SonyLIV, Airtel Xtream, Netflix and HBO Max. Fast-forwards ads on Prime Video. Each platform toggled independently.",
+  "description": "Mutes and Fast-forwards ads on 7 streaming platforms. Each platform toggled independently.",
   "permissions": ["storage", "webRequest", "tabs"],
   "host_permissions": [
     "*://*.hotstar.com/*",
