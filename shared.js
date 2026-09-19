@@ -6,6 +6,15 @@
 // Assigned onto the isolated world's window rather than declared with const, so a
 // re-injection cannot throw "Identifier 'JH' has already been declared".
 window.JH = window.JH || (() => {
+  // Players redraw constantly, so ad UI can vanish for a frame in the middle of a
+  // break. Ending the break on that flicker lets a burst of ad audio through, so
+  // audio only comes back once the ad UI has stayed gone this long. Mute is never
+  // delayed -- being early to silence costs nothing, being late is what is heard.
+  const AD_END_GRACE = 600;
+  // Backstop poll. The MutationObserver normally fires first; this only matters
+  // when an ad appears without mutating anything the observer watches.
+  const POLL_MS = 250;
+
   // Words that begin with "ad" but have nothing to do with advertising.
   const NOT_AD = /^(adaptive|address|administr|admin|adult|advance|add|additional|adjust|adobe|adapter|adopt)/;
   // "ad" glued straight onto a player noun: adbreak, adtimeindicator, adCount...
@@ -143,5 +152,5 @@ window.JH = window.JH || (() => {
     } catch (_) { /* extension context invalidated */ }
   }
 
-  return { isAdName, isAdElement, visible, matchesAdSelector, matchesPlayerAd, matchesAdText, playerScope, getVideo, throttle, send, contextAlive };
+  return { AD_END_GRACE, POLL_MS, isAdName, isAdElement, visible, matchesAdSelector, matchesPlayerAd, matchesAdText, playerScope, getVideo, throttle, send, contextAlive };
 })();

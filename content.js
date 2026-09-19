@@ -10,11 +10,6 @@
   let domAd = false;
   let lastSeen = 0;
 
-  // Hotstar redraws the player constantly, so the ad badge can vanish for a frame
-  // mid-break. Ending the break on that flicker unmutes the ad and throws away the
-  // network timer behind it, so require the UI to stay gone this long first.
-  const AD_END_GRACE = 600;
-
   const AD_SELECTORS = [
     '[class*="ad-overlay"]',
     '[class*="ad-container"]',
@@ -41,7 +36,7 @@
     if (detect()) {
       lastSeen = Date.now();
       if (!domAd) { domAd = true; JH.send({ type: "DOM_AD_START" }); }
-    } else if (domAd && Date.now() - lastSeen > AD_END_GRACE) {
+    } else if (domAd && Date.now() - lastSeen > JH.AD_END_GRACE) {
       domAd = false;
       JH.send({ type: "DOM_AD_END" });
     }
@@ -59,7 +54,7 @@
   });
 
   // Polls faster than the heartbeat so the grace period is confirmed promptly.
-  const evalTimer = setInterval(evaluate, 250);
+  const evalTimer = setInterval(evaluate, JH.POLL_MS);
   const tickTimer = setInterval(() => { if (enabled) JH.send({ type: "TICK" }); }, 1000);
 
   function teardown() {

@@ -32,6 +32,7 @@
   const STORAGE_KEY = platform.key;
 
   let enabled = false;
+  let lastSeen = 0;
   const muted = new Set(); // the exact elements we muted; players swap <video> nodes
 
   const AD_SELECTORS = [
@@ -81,7 +82,12 @@
     if (!JH.contextAlive()) { unmuteAll(); teardown(); return; }
     if (!enabled) { unmuteAll(); return; }
     if (!document.querySelector("video")) return;
-    if (adShowing()) muteAll(); else unmuteAll();
+    if (adShowing()) {
+      lastSeen = Date.now();
+      muteAll();
+    } else if (muted.size && Date.now() - lastSeen > JH.AD_END_GRACE) {
+      unmuteAll();
+    }
   }
 
   chrome.storage.local.get({ [STORAGE_KEY]: false }, (r) => { enabled = !!r[STORAGE_KEY]; tick(); });
@@ -95,7 +101,7 @@
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
-  const timer = setInterval(tick, 400);
+  const timer = setInterval(tick, JH.POLL_MS);
 
   function teardown() {
     clearInterval(timer);

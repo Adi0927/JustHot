@@ -18,6 +18,7 @@
   let skipping = false;
   let skipStartedAt = 0;
   let bailedUntil = 0;
+  let lastSeen = 0;
   let mutedEl = null;          // the exact element we muted; Prime swaps <video> nodes
   const rated = new Map();     // video element -> the playbackRate it had before we touched it
 
@@ -77,14 +78,26 @@
     }
   }
 
+  // Speed and audio are restored separately. Audio can afford to wait out the
+  // grace period; speed cannot, because 0.6s spent at 16x burns ~10s of the show.
+  //
   // Takes no element and has no early return: it restores every video it ever
   // touched, so a <video> swapped out mid-break cannot be left running at 16x.
-  function stopSkip() {
+  function restoreRate() {
     for (const [el, rate] of rated) { try { el.playbackRate = rate; } catch (_) {} }
     rated.clear();
-    if (mutedEl) { try { mutedEl.muted = false; } catch (_) {} mutedEl = null; }
     skipping = false;
     skipStartedAt = 0;
+  }
+
+  function restoreAudio() {
+    if (mutedEl) { try { mutedEl.muted = false; } catch (_) {} mutedEl = null; }
+  }
+
+  // Full stop, for disabling, bailing out and losing the extension context.
+  function stopSkip() {
+    restoreRate();
+    restoreAudio();
   }
 
   function tick() {
@@ -93,11 +106,15 @@
     if (!chrome.runtime || !chrome.runtime.id) { stopSkip(); teardown(); return; }
     if (!enabled) { stopSkip(); return; }
     if (adShowing()) {
+      lastSeen = Date.now();
       const v = JH.getVideo();
       if (v) startSkip(v);
     } else {
-      stopSkip();
+      // Normal speed resumes at once -- waiting here would skip part of the show.
+      restoreRate();
       bailedUntil = 0; // ad UI cleared, release the safety lock
+      // Audio waits, so a flickering ad badge cannot leak a burst of ad sound.
+      if (Date.now() - lastSeen > JH.AD_END_GRACE) restoreAudio();
     }
   }
 
@@ -112,7 +129,7 @@
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
-  const timer = setInterval(tick, 400);
+  const timer = setInterval(tick, JH.POLL_MS);
 
   function teardown() {
     clearInterval(timer);
