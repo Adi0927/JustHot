@@ -1,13 +1,19 @@
 // JustHot — Hotstar content script
 //
 // Reports on-screen ad UI state to the background worker so it can mute/unmute
-// the tab precisely — instant mute when an ad badge appears, instant unmute
-// the moment it clears. Also sends a 1s heartbeat (TICK) so unmute never gets
-// stuck when seamless SSAI ads show no on-screen UI.
+// the tab precisely — instant mute when an ad badge appears, unmute once the badge
+// has stayed gone for AD_END_GRACE. Also sends a 1s heartbeat (TICK) so unmute
+// never gets stuck when seamless SSAI ads show no on-screen UI.
 
 (() => {
   let enabled = false;
   let domAd = false;
+  let lastSeen = 0;
+
+  // Hotstar redraws the player constantly, so the ad badge can vanish for a frame
+  // mid-break. Ending the break on that flicker unmutes the ad and throws away the
+  // network timer behind it, so require the UI to stay gone this long first.
+  const AD_END_GRACE = 600;
 
   const AD_SELECTORS = [
     '[class*="ad-overlay"]',
@@ -15,44 +21,28 @@
     '[class*="ads-container"]',
     '[class*="player-ad"]',
     '[data-testid*="ad-"]',
-    'button[class*="skip"]',
   ];
 
-  // "Ad", "Advertisement", "Sponsored", "Ad 1 of 2", "Ad : 0:15"
-  const AD_TEXT = /^(ad|advertisement|sponsored|ad\s*\d+\s*of\s*\d+|ad\s*[:·]\s*\d)/i;
-
-  function visible(el) {
-    if (!el) return false;
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height) return false;
-    const s = getComputedStyle(el);
-    return s.visibility !== "hidden" && s.display !== "none" && s.opacity !== "0";
-  }
+  // "Ad", "Advertisement", "Sponsored", "Ad 1 of 2", "Ad : 0:15".
+  // \b matters: without it this matched "Adventure" and "Add to Watchlist".
+  const AD_TEXT = /^(ad|ads|advertisement|sponsored)\b|^ad\s*\d+\s*of\s*\d+|^ad\s*[:·]\s*\d/i;
 
   function detect() {
-    for (const sel of AD_SELECTORS) {
-      let nodes;
-      try { nodes = document.querySelectorAll(sel); } catch (_) { continue; }
-      for (const el of nodes) if (visible(el)) return true;
-    }
-    const leaves = document.querySelectorAll("span, div, p, button");
-    for (const el of leaves) {
-      if (el.children.length !== 0) continue;
-      const t = (el.textContent || "").trim();
-      if (t && t.length <= 18 && AD_TEXT.test(t) && visible(el)) return true;
-    }
-    return false;
+    if (JH.matchesAdSelector(AD_SELECTORS)) return true;
+    return JH.matchesAdText(AD_TEXT, 18, JH.playerScope());
   }
 
   function evaluate() {
     if (!enabled) {
-      if (domAd) { domAd = false; chrome.runtime.sendMessage({ type: "DOM_AD_END" }); }
+      if (domAd) { domAd = false; JH.send({ type: "DOM_AD_END" }); }
       return;
     }
-    const now = detect();
-    if (now !== domAd) {
-      domAd = now;
-      chrome.runtime.sendMessage({ type: now ? "DOM_AD_START" : "DOM_AD_END" });
+    if (detect()) {
+      lastSeen = Date.now();
+      if (!domAd) { domAd = true; JH.send({ type: "DOM_AD_START" }); }
+    } else if (domAd && Date.now() - lastSeen > AD_END_GRACE) {
+      domAd = false;
+      JH.send({ type: "DOM_AD_END" });
     }
   }
 
@@ -61,12 +51,12 @@
     if (a === "local" && "hotstarEnabled" in c) { enabled = !!c.hotstarEnabled.newValue; evaluate(); }
   });
 
-  new MutationObserver(() => evaluate()).observe(document.documentElement, {
+  const onMutation = JH.throttle(evaluate, 150);
+  new MutationObserver(onMutation).observe(document.documentElement, {
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
-  setInterval(() => {
-    evaluate();
-    if (enabled) chrome.runtime.sendMessage({ type: "TICK" });
-  }, 1000);
+  // Polls faster than the heartbeat so the grace period is confirmed promptly.
+  setInterval(evaluate, 250);
+  setInterval(() => { if (enabled) JH.send({ type: "TICK" }); }, 1000);
 })();

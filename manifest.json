@@ -1,17 +1,22 @@
 {
   "manifest_version": 3,
   "name": "JustHot",
-  "version": "5.1.0",
-  "description": "Mutes ad breaks on Hotstar live matches. Fast-forwards ads on Prime Video. Mutes ads on Zee5. Each platform toggled independently.",
+  "version": "5.2.0",
+  "description": "Mutes ad breaks on Hotstar, Zee5, SonyLIV, Airtel Xtream, Netflix and HBO Max. Fast-forwards ads on Prime Video. Each platform toggled independently.",
   "permissions": ["storage", "webRequest", "tabs"],
   "host_permissions": [
     "*://*.hotstar.com/*",
     "*://*.jiohotstar.com/*",
     "*://bifrost-api.hotstar.com/*",
     "*://*.primevideo.com/*",
-    "*://*.amazon.com/*",
-    "*://*.amazon.in/*",
-    "*://*.zee5.com/*"
+    "*://*.amazon.com/gp/video/*",
+    "*://*.amazon.in/gp/video/*",
+    "*://*.zee5.com/*",
+    "*://*.sonyliv.com/*",
+    "*://*.airtelxstream.in/*",
+    "*://*.netflix.com/*",
+    "*://*.max.com/*",
+    "*://*.hbomax.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -39,7 +44,7 @@
         "*://*.hotstar.com/*",
         "*://*.jiohotstar.com/*"
       ],
-      "js": ["content.js"],
+      "js": ["shared.js", "content.js"],
       "run_at": "document_idle"
     },
     {
@@ -48,15 +53,20 @@
         "*://*.amazon.com/gp/video/*",
         "*://*.amazon.in/gp/video/*"
       ],
-      "js": ["prime.js"],
+      "js": ["shared.js", "prime.js"],
       "run_at": "document_idle",
       "all_frames": true
     },
     {
       "matches": [
-        "*://*.zee5.com/*"
+        "*://*.zee5.com/*",
+        "*://*.sonyliv.com/*",
+        "*://*.airtelxstream.in/*",
+        "*://*.netflix.com/*",
+        "*://*.max.com/*",
+        "*://*.hbomax.com/*"
       ],
-      "js": ["zee5.js"],
+      "js": ["shared.js", "muter.js"],
       "run_at": "document_idle"
     }
   ]

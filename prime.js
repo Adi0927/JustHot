@@ -1,7 +1,7 @@
 // JustHot — Amazon Prime Video ad skipper
 //
 // When primeEnabled is ON: detects Prime Video ad breaks, fast-forwards through
-// them (muted), clicks any visible skip button, then restores normal playback
+// them (muted), clicks any visible ad-skip button, then restores normal playback
 // the moment the show resumes.
 //
 // Prime sometimes locks playback speed during ads — in that case we keep the
@@ -11,7 +11,7 @@
   let enabled = false;
   let skipping = false;
   let savedRate = 1;
-  let mutedByUs = false;
+  let mutedEl = null; // the exact element we muted; Prime swaps <video> nodes
 
   const AD_SELECTORS = [
     '[class*="adtimeindicator"]',
@@ -25,43 +25,25 @@
     '[class*="adBadge"]',
   ];
 
-  const AD_TEXT = /(^|\s)(ad|ads)\b|video will resume|ad\s*\d+\s*of\s*\d+|remaining|advertisement|skip\s+in\s+\d/i;
+  // "remaining" used to be an alternative here, which matched the player's own
+  // "Time remaining 04:12" and fast-forwarded the show at 16x.
+  const AD_TEXT = /^(ad|ads)\b|\bad\s*\d+\s*of\s*\d+|video will resume|advertisement|\bad\s+ends?\s+in\b|skip\s+in\s+\d/i;
 
-  function visible(el) {
-    if (!el) return false;
-    const r = el.getBoundingClientRect();
-    if (!r.width || !r.height) return false;
-    const s = getComputedStyle(el);
-    return s.visibility !== "hidden" && s.display !== "none" && s.opacity !== "0";
-  }
+  // Prime's own "Skip Intro" / "Skip Recap" are not ad controls.
+  const NOT_AD_SKIP = /\b(intro|recap|credits|preview|episode|season)\b/i;
 
   function adShowing() {
-    for (const sel of AD_SELECTORS) {
-      let nodes;
-      try { nodes = document.querySelectorAll(sel); } catch (_) { continue; }
-      for (const el of nodes) if (visible(el)) return true;
-    }
-    const scope = document.querySelectorAll(
-      '[class*="atvwebplayersdk"] span, [class*="atvwebplayersdk"] div, [class*="webPlayer"] span'
-    );
-    for (const el of scope) {
-      if (el.children.length) continue;
-      const t = (el.textContent || "").trim();
-      if (t && t.length <= 28 && AD_TEXT.test(t) && visible(el)) return true;
-    }
-    return false;
-  }
-
-  function getVideo() {
-    const vids = [...document.querySelectorAll("video")].filter((v) => v.readyState >= 1);
-    return vids.find((v) => !v.paused) || vids.find((v) => v.readyState >= 2) || vids[0] || null;
+    if (JH.matchesAdSelector(AD_SELECTORS)) return true;
+    const scope = document.querySelector('[class*="atvwebplayersdk"], [class*="webPlayer"]');
+    return JH.matchesAdText(AD_TEXT, 28, scope || JH.playerScope());
   }
 
   function clickSkipButtons() {
     const btns = document.querySelectorAll('button, [role="button"]');
     for (const b of btns) {
-      const t = (b.textContent || "").trim().toLowerCase();
-      if (/\bskip\b/.test(t) && visible(b)) { b.click(); return; }
+      const t = (b.textContent || "").trim();
+      if (!/\bskip\b/i.test(t) || NOT_AD_SKIP.test(t)) continue;
+      if (JH.visible(b)) { b.click(); return; }
     }
   }
 
@@ -69,7 +51,7 @@
     if (!skipping) {
       skipping = true;
       savedRate = v.playbackRate || 1;
-      if (!v.muted) { v.muted = true; mutedByUs = true; }
+      if (!v.muted) { v.muted = true; mutedEl = v; }
     }
     clickSkipButtons();
     try { v.playbackRate = 16; } catch (_) {}
@@ -78,15 +60,13 @@
   function stopSkip(v) {
     if (!skipping) return;
     skipping = false;
-    if (v) {
-      try { v.playbackRate = savedRate || 1; } catch (_) {}
-      if (mutedByUs) v.muted = false;
-    }
-    mutedByUs = false;
+    if (v) { try { v.playbackRate = savedRate || 1; } catch (_) {} }
+    // Unmute the element we actually muted, which may no longer be the current one.
+    if (mutedEl) { try { mutedEl.muted = false; } catch (_) {} mutedEl = null; }
   }
 
   function tick() {
-    const v = getVideo();
+    const v = JH.getVideo();
     if (!enabled) { stopSkip(v); return; }
     if (!v) return;
     if (adShowing()) startSkip(v); else stopSkip(v);
@@ -97,7 +77,8 @@
     if (a === "local" && "primeEnabled" in c) { enabled = !!c.primeEnabled.newValue; tick(); }
   });
 
-  new MutationObserver(() => tick()).observe(document.documentElement, {
+  const onMutation = JH.throttle(tick, 150);
+  new MutationObserver(onMutation).observe(document.documentElement, {
     childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"],
   });
 
