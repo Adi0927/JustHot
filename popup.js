@@ -13,7 +13,7 @@ const DEFAULTS = Object.fromEntries(PLATFORMS.map((p) => [p.key, false]));
 
 function paintLogo() {
   const anyOn = PLATFORMS.some((p) => document.getElementById(`${p.id}-on`).checked);
-  document.getElementById("logo").src = anyOn ? "icons/icon48.png" : "icons/icon48-gray.png";
+  document.getElementById("logo").classList.toggle("active", anyOn);
 }
 
 chrome.storage.local.get(DEFAULTS, (state) => {

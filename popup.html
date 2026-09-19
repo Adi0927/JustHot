@@ -21,7 +21,23 @@
       gap: 10px;
       margin-bottom: 14px;
     }
-    .head img { width: 48px; height: 48px; border-radius: 7px; }
+    .logo {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      flex-shrink: 0;
+    }
+    .logo img {
+      position: absolute;
+      inset: 0;
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+    }
+    /* Grey sits underneath and is the default, so the popup never opens on the
+       wrong state and flashes. Colour fades in over it when a platform is on. */
+    .logo .on { opacity: 0; transition: opacity .2s; }
+    .logo.active .on { opacity: 1; }
     .head h1  { font-size: 16px; font-weight: 700; margin: 0; letter-spacing: .15px; }
     .tagline  { font-size: 10px; color: #55585f; margin-top: 2px; line-height: 1.4; text-align: justify; }
 
@@ -75,12 +91,19 @@
     }
     .hint a { color: #ff7a00; text-decoration: none; }
     .hint a:hover { text-decoration: underline; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
   </style>
 </head>
 <body>
 
   <div class="head">
-    <img src="icons/icon128.png" id="logo" alt="JustHot" />
+    <div class="logo" id="logo">
+      <img src="icons/icon128-gray.png" alt="JustHot" />
+      <img src="icons/icon128.png" class="on" alt="" />
+    </div>
     <div>
       <h1>JustHot</h1>
       <div class="tagline">Auto-mutes or Fast-forwards<br />ads on 7 platforms.<br />So you never have to lose your cool.</div>

@@ -198,7 +198,7 @@ Full details: [PRIVACY.md](PRIVACY.md)
 ---
 
 <div align="center">
-  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes ads on six streaming platforms. Fast-forwards Prime Video ads." />
+  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes or Fast-forwards ads on seven streaming platforms." />
 </div>
 
 ---
