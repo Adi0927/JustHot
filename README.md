@@ -101,6 +101,31 @@ Each platform has its own On/Off toggle — enabling one does not affect the oth
 
 ---
 
+## Response times
+
+Muting is immediate; unmuting waits 0.6s to confirm the break really ended, so a
+flicker in the player's ad UI cannot let a burst of ad audio through.
+
+| Platform | Mute | Unmute |
+|----------|------|--------|
+| Hotstar | instant | 0.6 – 0.85 s |
+| Prime Video | 0 – 0.25 s | 0.6 – 0.85 s |
+| Zee5 | 0 – 0.25 s | 0.6 – 0.85 s |
+| SonyLIV | 0 – 0.25 s | 0.6 – 0.85 s |
+| Airtel Xtream | 0 – 0.25 s | 0.6 – 0.85 s |
+| Netflix | 0 – 0.25 s | 0.6 – 0.85 s |
+| HBO Max | 0 – 0.25 s | 0.6 – 0.85 s |
+
+Hotstar mutes at zero because it watches the ad-impression request rather than
+the screen. The rest have no such signal — their ads are stitched into the video
+stream — so they read the player's DOM instead.
+
+On Prime Video the two halves are separate: normal speed resumes the instant the
+ad clears, while audio waits out the same 0.6s. Delaying the speed too would
+spend 0.6s at 16×, skipping roughly 10 seconds of the show.
+
+---
+
 ## Known limitations
 
 Ad detection reads the page, so it depends on what each player puts in the DOM.
