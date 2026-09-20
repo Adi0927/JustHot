@@ -3,7 +3,7 @@
   <h1>JustHot</h1>
   <p><strong>Auto-mutes ads on Hotstar, Zee5, SonyLIV, Airtel Xtream,<br/>Netflix &amp; HBO Max. Fast-forwards Prime Video ads.<br/>So you never have to lose your cool.</strong></p>
   <img src="https://img.shields.io/badge/Manifest-V3-orange?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/version-5.2.0-orange?style=flat-square" alt="v5.2.0" />
+  <img src="https://img.shields.io/badge/version-5.2.1-orange?style=flat-square" alt="v5.2.1" />
   <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" alt="MIT license" />
 </div>
 
@@ -13,7 +13,7 @@
 
 JustHot is a lightweight Chrome extension (Manifest V3) built for streaming viewers who are tired of ad interruptions. It runs silently in the background — no accounts, no setup, no data collection.
 
-- **Version:** 5.2.0
+- **Version:** 5.2.1
 - **Size:** < 50 KB
 - **Platform:** Google Chrome (Manifest V3)
 
