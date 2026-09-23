@@ -2,10 +2,33 @@
   <img src="icons/icon128.png" width="88" alt="JustHot logo" />
   <h1>JustHot</h1>
   <p><strong>Auto-mutes ads on Hotstar, Zee5, SonyLIV, Airtel Xtream,<br/>Netflix &amp; HBO Max. Fast-forwards Prime Video ads.<br/>So you never have to lose your cool.</strong></p>
+  <p>
+    <a href="https://chromewebstore.google.com/detail/justhot/ighfnhjcjdohmphddhcmgliedmiaeeaf"><img src="https://img.shields.io/badge/Add_to_Chrome-Free-ff7a00?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Add to Chrome — free" /></a>
+  </p>
+  <a href="https://chromewebstore.google.com/detail/justhot/ighfnhjcjdohmphddhcmgliedmiaeeaf"><img src="https://img.shields.io/chrome-web-store/v/ighfnhjcjdohmphddhcmgliedmiaeeaf?style=flat-square&color=orange&label=chrome%20web%20store" alt="Chrome Web Store version" /></a>
   <img src="https://img.shields.io/badge/Manifest-V3-orange?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/version-5.2.1-orange?style=flat-square" alt="v5.2.1" />
   <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" alt="MIT license" />
 </div>
+
+---
+
+## Install
+
+**[Add JustHot from the Chrome Web Store →](https://chromewebstore.google.com/detail/justhot/ighfnhjcjdohmphddhcmgliedmiaeeaf)**
+
+Free. Works in Chrome, Edge, Brave, Opera and Vivaldi. After installing, click the
+JustHot icon in your toolbar and switch on the platforms you watch — every
+platform starts off.
+
+<details>
+<summary>Install from source instead</summary>
+
+1. Download this repository (**Code → Download ZIP**) and unzip it
+2. Open `chrome://extensions` (or `edge://extensions` in Edge)
+3. Turn on **Developer mode**
+4. Click **Load unpacked** and select the unzipped folder
+
+</details>
 
 ---
 
@@ -14,7 +37,7 @@
 JustHot is a lightweight Chrome extension (Manifest V3) built for streaming viewers who are tired of ad interruptions. It runs silently in the background — no accounts, no setup, no data collection.
 
 - **Version:** 5.2.1
-- **Size:** < 50 KB
+- **Size:** ~120 KB
 - **Platform:** Google Chrome (Manifest V3)
 
 ### Browser compatibility
@@ -22,7 +45,7 @@ JustHot is a lightweight Chrome extension (Manifest V3) built for streaming view
 | Browser | Works? | Notes |
 |---------|--------|-------|
 | Chrome | ✅ Yes | Primary platform |
-| Edge | ✅ Yes | Install directly from Chrome Web Store |
+| Edge | ✅ Yes | Install from the Chrome Web Store; allow extensions from other stores when Edge asks |
 | Brave | ✅ Yes | Install directly from Chrome Web Store |
 | Opera | ✅ Yes | Enable "Install Chrome Extensions" first |
 | Vivaldi | ✅ Yes | Chrome extensions work out of the box |
@@ -130,16 +153,21 @@ spend 0.6s at 16×, skipping roughly 10 seconds of the show.
 
 Ad detection reads the page, so it depends on what each player puts in the DOM.
 
-- **Hotstar, Prime Video, Zee5** — detection is built on signals confirmed against
-  those players and is the most reliable of the set.
-- **SonyLIV, Airtel Xtream** — detection uses the Google IMA / GPT / JW / Video.js
-  ad markers that these players expose, taken from the public uBlock Origin and
-  AdGuard filter lists rather than guessed.
-- **Netflix, HBO Max** — best-effort. Both are marked `$generichide` in those same
-  lists, meaning generic ad-class selectors are known to misfire on them, and
-  neither publishes a selector for an in-stream ad break. If muting does not
-  trigger on an ad there, that is the reason; please report it and include what
-  the player showed on screen.
+| Platform | Status |
+|----------|--------|
+| Prime Video | ✅ Verified on live ad breaks (v5.2.1) |
+| Airtel Xtream | ✅ Verified on live ad breaks (v5.2.1) |
+| Hotstar | Built on signals confirmed against the player |
+| Zee5 | Built on signals confirmed against the player |
+| SonyLIV | Built on Google IMA / GPT ad markers from public filter lists |
+| Netflix | Best-effort |
+| HBO Max | Best-effort |
+
+**Netflix and HBO Max are best-effort.** Both are marked `$generichide` in the
+public uBlock Origin and AdGuard filter lists, meaning generic ad-class
+selectors are known to misfire on them, and neither publishes a selector for an
+in-stream ad break. If muting does not trigger on an ad there, that is the
+reason; please report it and include what the player showed on screen.
 
 Nothing here blocks ads or touches DRM — the extension only mutes audio and, on
 Prime Video, changes playback speed.
@@ -198,7 +226,7 @@ Full details: [PRIVACY.md](PRIVACY.md)
 ---
 
 <div align="center">
-  <img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes or Fast-forwards ads on seven streaming platforms." />
+  <a href="https://chromewebstore.google.com/detail/justhot/ighfnhjcjdohmphddhcmgliedmiaeeaf"><img src=".github/social-preview.png" width="100%" alt="JustHot — Auto-mutes or Fast-forwards ads on seven streaming platforms." /></a>
 </div>
 
 ---
