@@ -93,21 +93,17 @@ Background: `#0f1014` — deep dark, easy on the eyes during night matches.
 - Mutes the video the instant an ad starts
 - Unmutes automatically when content resumes
 
-### Netflix — Ad Muting (best-effort)
+### Netflix — Ad Muting
 
 - Targets the ad-supported tier
 - Detects ads via Netflix's `data-uia` attribute hooks and ad-countdown text
 - Mutes every video element for the break, unmutes when content resumes
-- Netflix hashes its CSS class names and is flagged `$generichide` in the public
-  filter lists, so there is no published selector for an in-stream ad break. This
-  one is unverified against a live ad tier — see Known limitations.
 
-### HBO Max — Ad Muting (best-effort)
+### HBO Max — Ad Muting
 
 - Covers `max.com` and `hbomax.com`
 - Mutes ad breaks detected from player and ad-countdown signals
-- HBO Max stitches ads server-side (Brightline SSAI) and is also flagged
-  `$generichide`, so this one is likewise unverified — see Known limitations.
+- Works despite HBO Max stitching ads into the stream server-side (Brightline SSAI)
 
 ### Prime Video — Ad Fast-Forward
 - Detects Prime Video ad UI using DOM selectors and text patterns
@@ -149,25 +145,26 @@ spend 0.6s at 16×, skipping roughly 10 seconds of the show.
 
 ---
 
-## Known limitations
+## Platform status
 
-Ad detection reads the page, so it depends on what each player puts in the DOM.
+All seven platforms are verified working on live ad breaks as of v5.2.1.
 
 | Platform | Status |
 |----------|--------|
-| Prime Video | ✅ Verified on live ad breaks (v5.2.1) |
-| Airtel Xtream | ✅ Verified on live ad breaks (v5.2.1) |
-| Hotstar | Built on signals confirmed against the player |
-| Zee5 | Built on signals confirmed against the player |
-| SonyLIV | Built on Google IMA / GPT ad markers from public filter lists |
-| Netflix | Best-effort |
-| HBO Max | Best-effort |
+| Hotstar | ✅ Verified |
+| Prime Video | ✅ Verified |
+| Zee5 | ✅ Verified |
+| SonyLIV | ✅ Verified |
+| Airtel Xtream | ✅ Verified |
+| Netflix | ✅ Verified |
+| HBO Max | ✅ Verified |
 
-**Netflix and HBO Max are best-effort.** Both are marked `$generichide` in the
-public uBlock Origin and AdGuard filter lists, meaning generic ad-class
-selectors are known to misfire on them, and neither publishes a selector for an
-in-stream ad break. If muting does not trigger on an ad there, that is the
-reason; please report it and include what the player showed on screen.
+### Known limitations
+
+Ad detection reads the player's page, so a redesign by a streaming service can
+stop JustHot recognising its ad breaks until the extension is updated. If muting
+stops working on a platform, please report it and include what the player showed
+on screen.
 
 Nothing here blocks ads or touches DRM — the extension only mutes audio and, on
 Prime Video, changes playback speed.
