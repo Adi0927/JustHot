@@ -10,13 +10,12 @@
 // separate element, so an ad break mutes every <video> on the page rather than
 // just the one that happened to be playing beforehand.
 //
-// Netflix and HBO Max are the least certain of the set. Both are flagged
-// $generichide in the uBlock Origin / AdGuard lists, meaning generic ad-class
-// selectors are known to misfire on them, and neither has any published selector
-// for an in-stream ad break. Netflix hashes its CSS class names and exposes
-// data-uia instead; HBO Max stitches ads server-side via Brightline. Detection on
-// those two therefore leans on the data-uia hook and the ad-countdown text, and
-// should be treated as best-effort until it is confirmed against a live ad tier.
+// Netflix and HBO Max are both flagged $generichide in the uBlock Origin /
+// AdGuard lists, meaning generic ad-class selectors are known to misfire on them,
+// and neither publishes a selector for an in-stream ad break. Netflix hashes its
+// CSS class names and exposes data-uia instead; HBO Max stitches ads server-side
+// via Brightline. Detection on those two therefore leans on the data-uia hook and
+// the ad-countdown text.
 
 (() => {
   const PLATFORMS = [
